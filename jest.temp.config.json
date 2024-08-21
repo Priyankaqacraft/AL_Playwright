@@ -1,0 +1,26 @@
+{
+  "clearMocks": true,
+  "preset": "jest-puppeteer",
+  "roots": [
+    "tests"
+  ],
+  "globalSetup": "jest-environment-puppeteer/setup",
+  "globalTeardown": "jest-environment-puppeteer/teardown",
+  "testEnvironment": "jest-environment-puppeteer",
+  "setupFilesAfterEnv": [
+    "expect-puppeteer"
+  ],
+  "maxWorkers": 4,
+  "reporters": [
+    "default",
+    [
+      "jest-html-reporters",
+      {
+        "publicPath": "./html-report/run-2024-08-21-09-04-46",
+        "filename": "reports.html",
+        "expand": true,
+        "customInfos": []
+      }
+    ]
+  ]
+}

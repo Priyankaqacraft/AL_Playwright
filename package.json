@@ -1,0 +1,41 @@
+{
+  "name": "acelab",
+  "version": "1.0.0",
+  "description": "Acelab automated QA.",
+  "scripts": {
+    "lint": "eslint \"**/*.js\" --ignore-pattern node_modules/",
+    "testOnly": "node dynamic-jest-config.js",
+    "test": "node dynamic-jest-config.js",
+    "generate-index": "node generate-index.js",
+    "test-and-generate-report": "node dynamic-jest-config.js && node generate-report-index.js",
+    "deploy": "node dynamic-jest-config.js && node generate-report-index.js && netlify deploy --prod"
+  },
+  "author": "Mike Garite",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/preset-env": "^7.15.6",
+    "eslint-plugin-import": "^2.29.1",
+    "jest": "^27.2.1",
+    "jest-puppeteer": "^5.0.4",
+    "mailslurp-client": "^15.20.2",
+    "pdf-parse": "^1.1.1",
+    "puppeteer": "^10.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@jest/globals": "^27.2.1",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^27.2.1",
+    "babel-loader": "^8.2.2",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "expect-puppeteer": "^5.0.4",
+    "jest-html-reporter": "^3.10.2",
+    "jest-html-reporters": "^3.1.7",
+    "jest-image-snapshot": "^6.4.0",
+    "prettier": "^2.4.1",
+    "webpack": "^5.53.0"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}

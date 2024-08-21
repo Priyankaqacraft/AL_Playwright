@@ -1,0 +1,48 @@
+{
+  "conversationDashboardPage.test.js": [
+    "should verify that Opportunities Dashboard is available on Conversation Dashboard"
+  ],
+  "homePage.test.js": [
+    "should verify that Sign In button is available on Home Page",
+    "should verify that Join For Free button is available on Home Page",
+    "should verify that Join For Free button count on Home Page",
+    "should verify that For Manufacturers button is available on Home Page",
+    "should verify that Schedule an Intro Call link is available on Home Page",
+    "should verify that Discover How It Works text is available on Home Page",
+    "should verify that Schedule a Demo button is available on Home Page",
+    "should verify that How Acelab Works header is available on Home Page",
+    "should verify that Start a Search button is available on Home Page",
+    "should verify that Chat with an Expert button is available on Home Page",
+    "should verify that Resources & Education header is available on Home Page",
+    "should verify that FAQ header is available on Home Page"
+  ],
+  "landingPage.test.js": [
+    "should navigate to the construction details finder page when the ",
+    "should navigate to the Building Science Courses page when the ",
+    "should navigate to the Articles page when the ",
+    "should navigate to the Manufacturer Finder page when the ",
+    "should navigate to the About Us page when the "
+  ],
+  "myAccountPage.test.js": [
+    "should verify that The Personal Info Edit link opens expected page in same tab",
+    "should verify that The Settings Edit link opens expected page in same tab"
+  ],
+  "projectPage.test.js": [
+    "should create New Project properly",
+    "should delete New Project properly"
+  ],
+  "smoke.test.js": [
+    "should verify that Able to signin Acelab",
+    "should verify that Products link is present on Home Page",
+    "should verify that Manufacturers link is present on Home Page",
+    "should verify that Resources link is present on Home Page",
+    "should verify that My Conversations link is present on Home Page",
+    "should verify that Search Bar is present on Home Page",
+    "should verify that Profile Icon is present on Home Page",
+    "should verify that Project Button is present on Home Page",
+    "should verify that Open Previous Project link is present on Home Page",
+    "should verify my conversation icon navigates to My Conversation Page",
+    "should verify Profile Icon is clickable and has Manage Account Link",
+    "should verify Projects navigates to my project page"
+  ]
+}
