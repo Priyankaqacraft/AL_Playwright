@@ -22,7 +22,7 @@ export const setup = async (loginType = 'admin') => {
   ],
   });
 
-  page = await browser.newPage();
+  [page] = await browser.pages();
   await page.setViewport({ width: 1880, height: 881 });
   await performLogins(page,loginType);
   return { browser, page, timestampUTC };
@@ -40,7 +40,7 @@ export const noLoginsetup = async (loginType = 'admin') => {
   ],
   });
 
-  page = await browser.newPage();
+  [page] = await browser.pages();
   await page.setViewport({ width: 1880, height: 881 });
   return { browser, page, timestampUTC };
 };
@@ -58,7 +58,7 @@ export const mfgsetup = async (loginType = 'mfgRep') => {
   ],
   });
 
-  page = await browser.newPage();
+  [page] = await browser.pages();
   await page.setViewport({ width: 1880, height: 881 });
   await performLogins(page,loginType);
   return { browser, page, timestampUTC };
@@ -76,14 +76,11 @@ export const regressionsetup = async (loginType = 'regression') => {
   ],
   });
 
-  page = await browser.newPage();
+  [page] = await browser.pages();
   await page.setViewport({ width: 1880, height: 881 });
   await performLogins(page,loginType);
   return { browser, page, timestampUTC };
 };
-
-
-
 
 export const teardown = async () => {
   await browser.close();
