@@ -15,6 +15,8 @@ export const setup = async (loginType = 'admin') => {
     headless: false,
     args: [
       '--no-sandbox',
+      '--single-process',  // New Added for close chrome in BG
+      '--no-zygote',       // New Added for close chrome in BG
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--start-maximized',
@@ -32,14 +34,15 @@ export const noLoginsetup = async (loginType = 'admin') => {
   browser = await puppeteer.launch({
     headless: false,
     args: [
-      '--no-sandbox',
+      '--no-sandbox',   
+      '--single-process',  // New Added for close chrome in BG
+      '--no-zygote',       // New Added for close chrome in BG
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--start-maximized',
       '--force-device-scale-factor=1.0'
   ],
   });
-
   [page] = await browser.pages();
   await page.setViewport({ width: 1880, height: 881 });
   return { browser, page, timestampUTC };
@@ -51,6 +54,8 @@ export const mfgsetup = async (loginType = 'mfgRep') => {
     headless: false,
     args: [
       '--no-sandbox',
+      '--single-process',  // New Added for close chrome in BG
+      '--no-zygote',       // New Added for close chrome in BG
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--start-maximized',
@@ -69,6 +74,8 @@ export const regressionsetup = async (loginType = 'regression') => {
     headless: false,
     args: [
       '--no-sandbox',
+      '--single-process',  // New Added for close chrome in BG
+      '--no-zygote',       // New Added for close chrome in BG
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--start-maximized',
