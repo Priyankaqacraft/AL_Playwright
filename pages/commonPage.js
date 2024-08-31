@@ -3,14 +3,25 @@ import fs from 'fs';
 import path from 'path';
 import pdf from 'pdf-parse';
 import { activeBaseUrl } from '../utils/config';
+import electron from 'eslint-plugin-import/config/electron';
+
 
 
 class CommonPage {
-  constructor (page) {
+
+  constructor(page) {
     this.page = page;
+    this.context = context;
+    this.metaKeywordsSelector = 'meta[name="keywords"]';
+    this.metaDescriptionSelector = 'meta[name="description"]';
+    this.metaRobotsSelector = 'meta[name="robots"]';
+    this.metaViewportSelector = 'meta[name="viewport"]';
+    this.metaCharsetSelector = 'meta[charset="utf-8"]';
+    this.metaFormatDetectionSelector = 'meta[name="format-detection"]';
+    this.metaPinterestSelector = 'meta[name="pinterest"]';
   }
 
-  async performClick (viewXPath) {
+  async performClick(viewXPath) {
     await this.page.waitForXPath(viewXPath, { timeout: 40000 });
     const [element] = await this.page.$x(viewXPath);
     if (element) {
@@ -20,7 +31,7 @@ class CommonPage {
     }
   }
 
-  async getElementText (viewXPath) {
+  async getElementText(viewXPath) {
     await this.page.waitForXPath(viewXPath, { timeout: 10000 });
     const [element] = await this.page.$x(viewXPath);
     if (element) {
@@ -33,24 +44,24 @@ class CommonPage {
 
   async hoverOverElement(viewXPath) {
     try {
-        await this.page.waitForXPath(viewXPath, { timeout: 10000 });
+      await this.page.waitForXPath(viewXPath, { timeout: 10000 });
 
-        const [element] = await this.page.$x(viewXPath);
+      const [element] = await this.page.$x(viewXPath);
 
-        if (element) {
-            await element.hover();
-            
-            await this.page.waitForTimeout(1000);
-        } else {
-            throw new Error(`Element not found for XPath: ${viewXPath}`);
-        }
+      if (element) {
+        await element.hover();
+
+        await this.page.waitForTimeout(1000);
+      } else {
+        throw new Error(`Element not found for XPath: ${viewXPath}`);
+      }
     } catch (error) {
-        console.error(error.message);
-        throw error;
+      console.error(error.message);
+      throw error;
     }
- }
+  }
 
-  async getElementValue (viewXPath) {
+  async getElementValue(viewXPath) {
     await this.page.waitForXPath(viewXPath, { timeout: 10000 });
     const [element] = await this.page.$x(viewXPath);
     if (element) {
@@ -61,7 +72,7 @@ class CommonPage {
     }
   }
 
-  async isElementExists (viewXPath, timeout = 10000) {
+  async isElementExists(viewXPath, timeout = 10000) {
     try {
       await this.page.waitForXPath(viewXPath, { timeout });
       const elements = await this.page.$x(viewXPath);
@@ -71,7 +82,7 @@ class CommonPage {
     }
   }
 
-  async enterText (viewXPath, text) {
+  async enterText(viewXPath, text) {
     await this.page.waitForXPath(viewXPath, { timeout: 10000 });
     const [element] = await this.page.$x(viewXPath);
     if (element) {
@@ -83,16 +94,16 @@ class CommonPage {
     }
   }
 
-  generateRandomString (prefix = '') {
+  generateRandomString(prefix = '') {
     const randomString = Math.random().toString(36).substring(2, 10);
     return `${prefix}${randomString}`;
   }
 
-  async wait (seconds = 5) {
+  async wait(seconds = 5) {
     await this.page.waitForTimeout(seconds * 1000);
   }
 
-  async clickTabWithLabel (label) {
+  async clickTabWithLabel(label) {
     await this.page.waitForXPath(`//span[text()='${label}']`, { timeout: 10000 });
     const [tile] = await this.page.$x(`//span[text()='${label}']`);
     if (tile) {
@@ -102,11 +113,11 @@ class CommonPage {
     }
   }
 
-  async createRandomNumber (rowNum) {
+  async createRandomNumber(rowNum) {
     return Math.floor(Math.random() * rowNum) + 1;
   }
 
-  async getLength (viewXPath, timeout = 10000) {
+  async getLength(viewXPath, timeout = 10000) {
     try {
       await this.page.waitForXPath(viewXPath, { timeout });
       const elements = await this.page.$x(viewXPath);
@@ -118,15 +129,15 @@ class CommonPage {
 
   async getCurrentUrl(timeout = 10000) {
     try {
-        //await this.page.waitForNavigation({ timeout });
-        const currentUrl = await this.page.url();
-        return currentUrl;
+      //await this.page.waitForNavigation({ timeout });
+      const currentUrl = await this.page.url();
+      return currentUrl;
     } catch (error) {
-        console.error('Error fetching the current URL:', error);
-        return null;
+      console.error('Error fetching the current URL:', error);
+      return null;
     }
-   }
-  async setRandomJson (count, elementxpath, jsonName) {
+  }
+  async setRandomJson(count, elementxpath, jsonName) {
     const rows = await this.getLength(elementxpath);
 
     // Ensure we have at least count rows
@@ -167,7 +178,7 @@ class CommonPage {
     }
   }
 
-  async getAttribute (viewXPath, attributeName, timeout = 10000) {
+  async getAttribute(viewXPath, attributeName, timeout = 10000) {
     try {
       await this.page.waitForXPath(viewXPath, { timeout });
       const elements = await this.page.$x(viewXPath);
@@ -187,14 +198,14 @@ class CommonPage {
     }
   }
 
-  async setDownloadBehavior (downloadPath) {
+  async setDownloadBehavior(downloadPath) {
     await this.page._client.send('Page.setDownloadBehavior', {
       behavior: 'allow',
       downloadPath: downloadPath,
     });
   }
 
-  async readPDF (pdfFilePath) {
+  async readPDF(pdfFilePath) {
     const dataBuffer = fs.readFileSync(pdfFilePath);
 
     try {
@@ -211,7 +222,7 @@ class CommonPage {
       await this.page.waitForXPath(viewXPath, { timeout });
       // Find the element using XPath
       const elements = await this.page.$x(viewXPath);
-      
+
       if (elements.length > 0) {
         // Evaluate the "disabled" attribute
         const isDisabled = await this.page.evaluate(
@@ -226,15 +237,15 @@ class CommonPage {
       return false;
     }
   }
-  
+
 
   async getValuesByKey(data, key) {
     const item = data.find(element => element.key === key);
     return item ? item.values : null;
   }
 
-  async downloadGraph(downloadButtonSelector, downloadPath,downloadFormat) {
-    
+  async downloadGraph(downloadButtonSelector, downloadPath, downloadFormat) {
+
     if (!fs.existsSync(downloadPath)) {
       fs.mkdirSync(downloadPath, { recursive: true });
     }
@@ -246,7 +257,7 @@ class CommonPage {
 
     const files = fs.readdirSync(downloadPath);
     console.log('Files in download directory:', files);
-    
+
 
     switch (downloadFormat) {
       case 'SVG':
@@ -259,7 +270,7 @@ class CommonPage {
           throw new Error('No SVG file found in the download directory');
         }
         break;
-  
+
       case 'PNG':
         const pngFile = files.find((file) => file.endsWith('.png'));
 
@@ -270,7 +281,7 @@ class CommonPage {
           throw new Error('No PNG file found in the download directory');
         }
         break;
-  
+
       case 'CSV':
         const csvFile = files.find((file) => file.endsWith('.csv'));
 
@@ -280,7 +291,7 @@ class CommonPage {
         } else {
           throw new Error('No CSV file found in the download directory');
         }
-        
+
         break;
       case 'PDF':
         const pdfFile = files.find((file) => file.endsWith('.pdf'));
@@ -291,11 +302,11 @@ class CommonPage {
         } else {
           throw new Error('No PDF file found in the download directory');
         }
-        
+
         break;
 
       default:
-          throw new Error('Invalid download format specified');
+        throw new Error('Invalid download format specified');
     }
 
   }
@@ -305,46 +316,209 @@ class CommonPage {
   }
 
   /**** Methods from Basepage.cs *******/
-   async getAllOpenTabUrls(context) {
+  async getAllOpenTabUrls(context) {
     const urls = [];
-    const pages = context.pages();  // Get all open pages/tabs in the context
-  
-    for (const page of pages) {
-      urls.push(await page.url());  // Get the URL of each page/tab
-    }
-  
-    return urls;
-   }
+    const pages = context.pages(); 
 
-   async navigateTo(page) {
-    const url = getPageURL(path);  // Get the full URL using the provided path
-    await page.goto(url);  // Navigate to the URL
-    // await waitForNuxtComplete(page);  // Uncomment if you have a function to wait for Nuxt.js to complete
+    for (const page of pages) {
+      urls.push(await page.url());  
+    }
+
+    return urls;
   }
 
   /*****Method for equal URL*** */
   async areEqual(expected, actual, message, ...args) {
     try {
-        expect(actual).toEqual(expected);
-        console.log(message, ...args);
+      expect(actual).toEqual(expected);
+      console.log(message, ...args);
     } catch (error) {
-        console.error(message, ...args);
-        throw error;
+      console.error(message, ...args);
+      throw error;
     }
-}
-
-async getAllOpenTabUrls() {
-  const urls = [];
-  const pages = await context.pages(); // Get all open pages (tabs)
-
-  for (let i = 0; i < pages.length; i++) {
-      const url = await pages[i].url();
-      urls.push(url);
   }
 
-  return urls;
+  async getElementsTextByTagName(tagName) {
+    const elements = await this.page.$$(tagName); 
+    const elementsText = [];
+
+    for (const element of elements) {
+        const innerText = await element.evaluate(el => el.innerText);
+        const normalizedText = innerText.normalize().replace(/\r/g, "").replace(/\n/g, "").trim();
+        elementsText.push(normalizedText);
+    }
+
+    return elementsText.join(" ");
+  }
+
+  async getElementsByTagName(tagName) {
+    const elements = await this.page.$$(tagName);
+    const elementsText = [];
+
+    for (const element of elements) {
+        const text = await element.evaluate(el => el.innerText.trim().replace(/\r?\n|\r/g, ''));
+        elementsText.push(text);
+    }
+
+    return elementsText;
+  }
+
+  // Utility method to get meta content attribute
+  async getMetaContentName(selector) {
+    const content = await this.page.evaluate(selector => {
+      const element = document.querySelector(selector);
+      return element ? element.getAttribute('content') : null;
+    }, selector);
+    return content;
+  }
+
+  // Example methods to use getMetaContentName
+  async getMetaKeywordsContent() {
+    return await this.getMetaContentName(this.metaKeywordsSelector);
+  }
+
+  async getMetaDescriptionContent() {
+    return await this.getMetaContentName(this.metaDescriptionSelector);
+  }
+
+  async getMetaRobotsContent() {
+    return await this.getMetaContentName(this.metaRobotsSelector);
+  }
+
+  async getMetaViewportContent() {
+    return await this.getMetaContentName(this.metaViewportSelector);
+  }
+
+  async getMetaCharsetContent() {
+    return await this.getMetaContentName(this.metaCharsetSelector);
+  }
+
+  async getMetaFormatDetectionContent() {
+    return await this.getMetaContentName(this.metaFormatDetectionSelector);
+  }
+
+  async getMetaPinterestContent() {
+    return await this.getMetaContentName(this.metaPinterestSelector);
+  }
+
+
+  async navigateTo(path) {
+    await this.page.goto(this.getUrl(path));
+  }
+
+  getBaseUrl() {
+    return Settings.UrlBase + this.getEnvironment() + Settings.UrlEnd;
+  }
+
+  getEnvironment() {
+    const gitlabEnvironment = process.env.environment;
+    let urlEnvironment;
+
+    if (gitlabEnvironment !== undefined && gitlabEnvironment !== null) {
+      urlEnvironment = gitlabEnvironment;
+    } else {
+      urlEnvironment = Setting.TestEnvironment;
+    }
+
+    switch (urlEnvironment.substring(0, 2)) {
+      case "ci":
+      case "de":
+        return urlEnvironment;
+      default:
+        return "qa";
+    }
+  }
+
+  getUrl(path) {
+    return this.getBaseUrl() + path;
+  }
+
+  async closeCurrentTab() {
+    const pages = await this.page.browser().pages();
+    if (pages.length > 1) {
+      await this.page.close();
+      if (pages[0] !== this.page) {
+        await pages[0].bringToFront();
+      }
+    } else {
+      console.log('No other tabs to switch to.');
+    }
+  }
+
+  async switchTo(urlPart) {
+    const pages = await this.page.browser().pages();
+    for (const p of pages) {
+      if (p.url().includes(urlPart)) {
+        await p.bringToFront();
+        this.page = p;
+        return p;
+      }
+    }
+    throw new Error(`No page found with URL containing '${urlPart}'`);
+  }
+
+  async isVisibleInViewport(selector) {
+    for (let i = 0; i < 5; i++) {
+      try {
+        const isVisible = await this.page.evaluate((selector) => {
+          const elem = document.querySelector(selector);
+          if (!elem) return false;
+
+          const box = elem.getBoundingClientRect();
+          const cx = box.left + box.width / 2;
+          const cy = box.top + box.height / 2;
+          const e = document.elementFromPoint(cx, cy);
+
+          for (let currentElement = e; currentElement; currentElement = currentElement.parentElement) {
+            if (currentElement === elem) {
+              return true;
+            }
+          }
+          return false;
+        }, selector);
+
+        if (isVisible) {
+          return true;
+        }
+      } catch (error) {
+      }
+
+      await this.page.waitForTimeout(300);
+    }
+    return false;
+  }
+
+  async setLocalStorageToNotShowJoinPushModal() {
+    await this.page.evaluate(() => {
+      localStorage.setItem('acelab.sute', '1973094957000');
+      sessionStorage.setItem('pageCounter', '-15');
+    });
+  }
+  
+  async getList(xpath) {
+    
+    const elements = await this.page.$x(xpath);
+  
+    if (!elements.length) {
+      throw new Error(`No elements found for XPath: ${xpath}`);
+    }
+
+    const elementsText = [];
+    for (const element of elements) {
+      const text = await element.evaluate(el => el.textContent.trim());
+      elementsText.push(text);
+    }
+    return elementsText.join('\n');
+  }
 }
 
-}
+const Settings = {
+  UrlBase: "https://acelab-public-site-",
+  UrlEnd: "-vnhmkx7udq-uk.a.run.app/"
+};
+
+const Setting = {
+  TestEnvironment: "qa-environment"
+};
 
 module.exports = CommonPage;

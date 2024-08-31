@@ -18,6 +18,7 @@ class LoginPage extends CommonPage{
         this.ResourceAndEducationHeader="//p[text()='Resources & Education']";
         this.faqHeader="//h2[text()='FAQ']";
         this.welcomeBackHomePage="//h1[contains(text(),'Welcome Back')]";
+        this.termsOfUse="(//a[text()='Terms of Use'])[1]";
         
     }
 
