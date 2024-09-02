@@ -322,28 +322,79 @@ class CommonPage {
     // await waitForNuxtComplete(page);  // Uncomment if you have a function to wait for Nuxt.js to complete
   }
 
-  /*****Method for equal URL*** */
-  async areEqual(expected, actual, message, ...args) {
-    try {
-        expect(actual).toEqual(expected);
-        console.log(message, ...args);
-    } catch (error) {
-        console.error(message, ...args);
-        throw error;
+  async clearAndSendKeys(viewXPath,keys) {
+    await this.page.waitForXPath(viewXPath, { timeout: 40000 });
+    const [element] = await this.page.$x(viewXPath);
+    if (element) {
+    await element.click({ clickCount: 3 }); // Triple-click to select all text
+    await element.press('Delete');          // Delete the selected text (clear the field)
+    await element.type(keys);    // Type the new text into the input field
+  
     }
-}
-
-async getAllOpenTabUrls() {
-  const urls = [];
-  const pages = await context.pages(); // Get all open pages (tabs)
-
-  for (let i = 0; i < pages.length; i++) {
-      const url = await pages[i].url();
-      urls.push(url);
+    else {
+      throw new Error(`Element not found for XPath: ${viewXPath}`);
+    }
+  }
+  
+  async  get_list(elementsXPath) {
+    const elements = await this.page.waitForXPath(elementsXPath, { timeout: 40000 });// Get all elements matching the XPath
+    const elementsx = await this.page.$x(elementsXPath);
+    const elementsText = await this.page.$$eval(elementsXPath, elements =>
+      elements.map(element => element.textContent.trim())
+    );
+    if (!elementsx.length) {
+      throw new Error(`No elements found for XPath: ${elementsXPath}`);
+    }
+  
+    /*const elementsText = await Promise.all(elements.map(async (element) => {
+      const text = await await element.evaluate(el => el.textContent);
+      return text.trim(); // Optionally remove leading/trailing whitespace
+    }));*/
+    
+  
+    return elementsText.join(',');
   }
 
-  return urls;
+  
+
+
+async refreshPage() {
+  const currentUrl = await this.page.url();
+  await this.page.goto(currentUrl, { waitUntil: 'networkidle0' }); // Wait for page to fully load
+  console.log('Page refreshed'); // Optional: Log for informational purposes
 }
+
+async switchWindow() {
+  
+  const initialPage = this.page;
+  const initialPages =  await this.page.url()
+ /* const currentUrl = await this.page.url();
+  return currentUrl;*/
+  let newPage = null;
+
+  // Wait for the click action to possibly open a new window or tab
+  await Promise.all([
+      this.wait(3), // Wait for any potential delay before a new page opens
+      new Promise(resolve => setTimeout(resolve, 3000)), // Just ensuring we give enough time for a new tab to open
+  ]);
+
+  // Look for any new pages/tabs that have been opened
+  const pages = await this.browser.pages();
+  for (let page of pages) {
+      if (!initialPages.includes(page)) {
+          newPage = page;
+          break;
+      }
+  }
+
+  if (newPage) {
+      this.page = newPage;
+      await this.page.bringToFront(); // Bring the new page to the front
+  } else {
+      throw new Error("No new window/tab was found.");
+  }
+}
+  
 
 }
 
