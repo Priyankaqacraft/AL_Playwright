@@ -3,25 +3,14 @@ import fs from 'fs';
 import path from 'path';
 import pdf from 'pdf-parse';
 import { activeBaseUrl } from '../utils/config';
-import electron from 'eslint-plugin-import/config/electron';
-
 
 
 class CommonPage {
-
-  constructor(page) {
+  constructor (page) {
     this.page = page;
-    this.context = context;
-    this.metaKeywordsSelector = 'meta[name="keywords"]';
-    this.metaDescriptionSelector = 'meta[name="description"]';
-    this.metaRobotsSelector = 'meta[name="robots"]';
-    this.metaViewportSelector = 'meta[name="viewport"]';
-    this.metaCharsetSelector = 'meta[charset="utf-8"]';
-    this.metaFormatDetectionSelector = 'meta[name="format-detection"]';
-    this.metaPinterestSelector = 'meta[name="pinterest"]';
   }
 
-  async performClick(viewXPath) {
+  async performClick (viewXPath) {
     await this.page.waitForXPath(viewXPath, { timeout: 40000 });
     const [element] = await this.page.$x(viewXPath);
     if (element) {
@@ -31,7 +20,7 @@ class CommonPage {
     }
   }
 
-  async getElementText(viewXPath) {
+  async getElementText (viewXPath) {
     await this.page.waitForXPath(viewXPath, { timeout: 10000 });
     const [element] = await this.page.$x(viewXPath);
     if (element) {
@@ -44,24 +33,24 @@ class CommonPage {
 
   async hoverOverElement(viewXPath) {
     try {
-      await this.page.waitForXPath(viewXPath, { timeout: 10000 });
+        await this.page.waitForXPath(viewXPath, { timeout: 10000 });
 
-      const [element] = await this.page.$x(viewXPath);
+        const [element] = await this.page.$x(viewXPath);
 
-      if (element) {
-        await element.hover();
-
-        await this.page.waitForTimeout(1000);
-      } else {
-        throw new Error(`Element not found for XPath: ${viewXPath}`);
-      }
+        if (element) {
+            await element.hover();
+            
+            await this.page.waitForTimeout(1000);
+        } else {
+            throw new Error(`Element not found for XPath: ${viewXPath}`);
+        }
     } catch (error) {
-      console.error(error.message);
-      throw error;
+        console.error(error.message);
+        throw error;
     }
-  }
+ }
 
-  async getElementValue(viewXPath) {
+  async getElementValue (viewXPath) {
     await this.page.waitForXPath(viewXPath, { timeout: 10000 });
     const [element] = await this.page.$x(viewXPath);
     if (element) {
@@ -72,7 +61,7 @@ class CommonPage {
     }
   }
 
-  async isElementExists(viewXPath, timeout = 10000) {
+  async isElementExists (viewXPath, timeout = 10000) {
     try {
       await this.page.waitForXPath(viewXPath, { timeout });
       const elements = await this.page.$x(viewXPath);
@@ -82,7 +71,7 @@ class CommonPage {
     }
   }
 
-  async enterText(viewXPath, text) {
+  async enterText (viewXPath, text) {
     await this.page.waitForXPath(viewXPath, { timeout: 10000 });
     const [element] = await this.page.$x(viewXPath);
     if (element) {
@@ -94,16 +83,16 @@ class CommonPage {
     }
   }
 
-  generateRandomString(prefix = '') {
+  generateRandomString (prefix = '') {
     const randomString = Math.random().toString(36).substring(2, 10);
     return `${prefix}${randomString}`;
   }
 
-  async wait(seconds = 5) {
+  async wait (seconds = 5) {
     await this.page.waitForTimeout(seconds * 1000);
   }
 
-  async clickTabWithLabel(label) {
+  async clickTabWithLabel (label) {
     await this.page.waitForXPath(`//span[text()='${label}']`, { timeout: 10000 });
     const [tile] = await this.page.$x(`//span[text()='${label}']`);
     if (tile) {
@@ -113,11 +102,11 @@ class CommonPage {
     }
   }
 
-  async createRandomNumber(rowNum) {
+  async createRandomNumber (rowNum) {
     return Math.floor(Math.random() * rowNum) + 1;
   }
 
-  async getLength(viewXPath, timeout = 10000) {
+  async getLength (viewXPath, timeout = 10000) {
     try {
       await this.page.waitForXPath(viewXPath, { timeout });
       const elements = await this.page.$x(viewXPath);
@@ -129,15 +118,15 @@ class CommonPage {
 
   async getCurrentUrl(timeout = 10000) {
     try {
-      //await this.page.waitForNavigation({ timeout });
-      const currentUrl = await this.page.url();
-      return currentUrl;
+        //await this.page.waitForNavigation({ timeout });
+        const currentUrl = await this.page.url();
+        return currentUrl;
     } catch (error) {
-      console.error('Error fetching the current URL:', error);
-      return null;
+        console.error('Error fetching the current URL:', error);
+        return null;
     }
-  }
-  async setRandomJson(count, elementxpath, jsonName) {
+   }
+  async setRandomJson (count, elementxpath, jsonName) {
     const rows = await this.getLength(elementxpath);
 
     // Ensure we have at least count rows
@@ -178,7 +167,7 @@ class CommonPage {
     }
   }
 
-  async getAttribute(viewXPath, attributeName, timeout = 10000) {
+  async getAttribute (viewXPath, attributeName, timeout = 10000) {
     try {
       await this.page.waitForXPath(viewXPath, { timeout });
       const elements = await this.page.$x(viewXPath);
@@ -198,14 +187,14 @@ class CommonPage {
     }
   }
 
-  async setDownloadBehavior(downloadPath) {
+  async setDownloadBehavior (downloadPath) {
     await this.page._client.send('Page.setDownloadBehavior', {
       behavior: 'allow',
       downloadPath: downloadPath,
     });
   }
 
-  async readPDF(pdfFilePath) {
+  async readPDF (pdfFilePath) {
     const dataBuffer = fs.readFileSync(pdfFilePath);
 
     try {
@@ -222,7 +211,7 @@ class CommonPage {
       await this.page.waitForXPath(viewXPath, { timeout });
       // Find the element using XPath
       const elements = await this.page.$x(viewXPath);
-
+      
       if (elements.length > 0) {
         // Evaluate the "disabled" attribute
         const isDisabled = await this.page.evaluate(
@@ -237,15 +226,15 @@ class CommonPage {
       return false;
     }
   }
-
+  
 
   async getValuesByKey(data, key) {
     const item = data.find(element => element.key === key);
     return item ? item.values : null;
   }
 
-  async downloadGraph(downloadButtonSelector, downloadPath, downloadFormat) {
-
+  async downloadGraph(downloadButtonSelector, downloadPath,downloadFormat) {
+    
     if (!fs.existsSync(downloadPath)) {
       fs.mkdirSync(downloadPath, { recursive: true });
     }
@@ -257,7 +246,7 @@ class CommonPage {
 
     const files = fs.readdirSync(downloadPath);
     console.log('Files in download directory:', files);
-
+    
 
     switch (downloadFormat) {
       case 'SVG':
@@ -270,7 +259,7 @@ class CommonPage {
           throw new Error('No SVG file found in the download directory');
         }
         break;
-
+  
       case 'PNG':
         const pngFile = files.find((file) => file.endsWith('.png'));
 
@@ -281,7 +270,7 @@ class CommonPage {
           throw new Error('No PNG file found in the download directory');
         }
         break;
-
+  
       case 'CSV':
         const csvFile = files.find((file) => file.endsWith('.csv'));
 
@@ -291,7 +280,7 @@ class CommonPage {
         } else {
           throw new Error('No CSV file found in the download directory');
         }
-
+        
         break;
       case 'PDF':
         const pdfFile = files.find((file) => file.endsWith('.pdf'));
@@ -302,11 +291,11 @@ class CommonPage {
         } else {
           throw new Error('No PDF file found in the download directory');
         }
-
+        
         break;
 
       default:
-        throw new Error('Invalid download format specified');
+          throw new Error('Invalid download format specified');
     }
 
   }
@@ -316,16 +305,16 @@ class CommonPage {
   }
 
   /**** Methods from Basepage.cs *******/
-  async getAllOpenTabUrls(context) {
+   async getAllOpenTabUrls(context) {
     const urls = [];
-    const pages = context.pages(); 
-
+    const pages = context.pages();  // Get all open pages/tabs in the context
+  
     for (const page of pages) {
-      urls.push(await page.url());  
+      urls.push(await page.url());  // Get the URL of each page/tab
     }
-
+  
     return urls;
-  }
+   }
 
   /*****Method for equal URL*** */
   async areEqual(expected, actual, message, ...args) {
@@ -336,7 +325,18 @@ class CommonPage {
       console.error(message, ...args);
       throw error;
     }
-  }
+ }
+ async clearAndSendKeys(viewXPath,keys) {
+   await this.page.waitForXPath(viewXPath, { timeout: 40000 });
+    const [element] = await this.page.$x(viewXPath);
+    if (element) {
+    await element.click({ clickCount: 3 }); // Triple-click to select all text
+    await element.press('Delete');          // Delete the selected text (clear the field)
+    await element.type(keys);    // Type the new text into the input field
+  
+    }
+    else {
+       throw new Error(`Element not found for XPath: ${viewXPath}`);
 
   async getElementsTextByTagName(tagName) {
     const elements = await this.page.$$(tagName); 
@@ -361,7 +361,7 @@ class CommonPage {
     }
 
     return elementsText;
-  }
+   }
 
   // Utility method to get meta content attribute
   async getMetaContentName(selector) {
@@ -371,36 +371,6 @@ class CommonPage {
     }, selector);
     return content;
   }
-
-  // Example methods to use getMetaContentName
-  async getMetaKeywordsContent() {
-    return await this.getMetaContentName(this.metaKeywordsSelector);
-  }
-
-  async getMetaDescriptionContent() {
-    return await this.getMetaContentName(this.metaDescriptionSelector);
-  }
-
-  async getMetaRobotsContent() {
-    return await this.getMetaContentName(this.metaRobotsSelector);
-  }
-
-  async getMetaViewportContent() {
-    return await this.getMetaContentName(this.metaViewportSelector);
-  }
-
-  async getMetaCharsetContent() {
-    return await this.getMetaContentName(this.metaCharsetSelector);
-  }
-
-  async getMetaFormatDetectionContent() {
-    return await this.getMetaContentName(this.metaFormatDetectionSelector);
-  }
-
-  async getMetaPinterestContent() {
-    return await this.getMetaContentName(this.metaPinterestSelector);
-  }
-
 
   async navigateTo(path) {
     await this.page.goto(this.getUrl(path));
@@ -432,7 +402,11 @@ class CommonPage {
   getUrl(path) {
     return this.getBaseUrl() + path;
   }
-
+async refreshPage() {
+  const currentUrl = await this.page.url();
+  await this.page.goto(currentUrl, { waitUntil: 'networkidle0' }); // Wait for page to fully load
+  console.log('Page refreshed'); // Optional: Log for informational purposes
+}
   async closeCurrentTab() {
     const pages = await this.page.browser().pages();
     if (pages.length > 1) {
@@ -486,7 +460,7 @@ class CommonPage {
       await this.page.waitForTimeout(300);
     }
     return false;
-  }
+ }
 
   async setLocalStorageToNotShowJoinPushModal() {
     await this.page.evaluate(() => {
