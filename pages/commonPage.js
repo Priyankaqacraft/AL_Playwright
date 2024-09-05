@@ -316,14 +316,18 @@ class CommonPage {
     return urls;
    }
 
-   async navigateTo(page) {
-    const url = getPageURL(path);  // Get the full URL using the provided path
-    await page.goto(url);  // Navigate to the URL
-    // await waitForNuxtComplete(page);  // Uncomment if you have a function to wait for Nuxt.js to complete
-  }
-
-  async clearAndSendKeys(viewXPath,keys) {
-    await this.page.waitForXPath(viewXPath, { timeout: 40000 });
+  /*****Method for equal URL*** */
+  async areEqual(expected, actual, message, ...args) {
+    try {
+      expect(actual).toEqual(expected);
+      console.log(message, ...args);
+    } catch (error) {
+      console.error(message, ...args);
+      throw error;
+    }
+ }
+ async clearAndSendKeys(viewXPath,keys) {
+   await this.page.waitForXPath(viewXPath, { timeout: 40000 });
     const [element] = await this.page.$x(viewXPath);
     if (element) {
     await element.click({ clickCount: 3 }); // Triple-click to select all text
@@ -332,70 +336,165 @@ class CommonPage {
   
     }
     else {
-      throw new Error(`Element not found for XPath: ${viewXPath}`);
+       throw new Error(`Element not found for XPath: ${viewXPath}`);
     }
   }
-  
-  async  get_list(elementsXPath) {
-    const elements = await this.page.waitForXPath(elementsXPath, { timeout: 40000 });// Get all elements matching the XPath
-    const elementsx = await this.page.$x(elementsXPath);
-    const elementsText = await this.page.$$eval(elementsXPath, elements =>
-      elements.map(element => element.textContent.trim())
-    );
-    if (!elementsx.length) {
-      throw new Error(`No elements found for XPath: ${elementsXPath}`);
+
+  async getElementsTextByTagName(tagName) {
+    const elements = await this.page.$$(tagName); 
+    const elementsText = [];
+
+    for (const element of elements) {
+        const innerText = await element.evaluate(el => el.innerText);
+        const normalizedText = innerText.normalize().replace(/\r/g, "").replace(/\n/g, "").trim();
+        elementsText.push(normalizedText);
     }
-  
-    /*const elementsText = await Promise.all(elements.map(async (element) => {
-      const text = await await element.evaluate(el => el.textContent);
-      return text.trim(); // Optionally remove leading/trailing whitespace
-    }));*/
-    
-  
-    return elementsText.join(',');
+
+    return elementsText.join(" ");
   }
 
-  
+  async getElementsByTagName(tagName) {
+    const elements = await this.page.$$(tagName);
+    const elementsText = [];
 
+    for (const element of elements) {
+        const text = await element.evaluate(el => el.innerText.trim().replace(/\r?\n|\r/g, ''));
+        elementsText.push(text);
+    }
 
+    return elementsText;
+   }
+
+  // Utility method to get meta content attribute
+  async getMetaContentName(selector) {
+    const content = await this.page.evaluate(selector => {
+      const element = document.querySelector(selector);
+      return element ? element.getAttribute('content') : null;
+    }, selector);
+    return content;
+  }
+
+  async navigateTo(path) {
+    await this.page.goto(this.getUrl(path));
+  }
+
+  getBaseUrl() {
+    return Settings.UrlBase + this.getEnvironment() + Settings.UrlEnd;
+  }
+
+  getEnvironment() {
+    const gitlabEnvironment = process.env.environment;
+    let urlEnvironment;
+
+    if (gitlabEnvironment !== undefined && gitlabEnvironment !== null) {
+      urlEnvironment = gitlabEnvironment;
+    } else {
+      urlEnvironment = Setting.TestEnvironment;
+    }
+
+    switch (urlEnvironment.substring(0, 2)) {
+      case "ci":
+      case "de":
+        return urlEnvironment;
+      default:
+        return "qa";
+    }
+  }
+
+  getUrl(path) {
+    return this.getBaseUrl() + path;
+  }
 async refreshPage() {
   const currentUrl = await this.page.url();
   await this.page.goto(currentUrl, { waitUntil: 'networkidle0' }); // Wait for page to fully load
   console.log('Page refreshed'); // Optional: Log for informational purposes
 }
-
-async switchWindow() {
-  
-  const initialPage = this.page;
-  const initialPages =  await this.page.url()
- /* const currentUrl = await this.page.url();
-  return currentUrl;*/
-  let newPage = null;
-
-  // Wait for the click action to possibly open a new window or tab
-  await Promise.all([
-      this.wait(3), // Wait for any potential delay before a new page opens
-      new Promise(resolve => setTimeout(resolve, 3000)), // Just ensuring we give enough time for a new tab to open
-  ]);
-
-  // Look for any new pages/tabs that have been opened
-  const pages = await this.browser.pages();
-  for (let page of pages) {
-      if (!initialPages.includes(page)) {
-          newPage = page;
-          break;
+  async closeCurrentTab() {
+    const pages = await this.page.browser().pages();
+    if (pages.length > 1) {
+      await this.page.close();
+      if (pages[0] !== this.page) {
+        await pages[0].bringToFront();
       }
+    } else {
+      console.log('No other tabs to switch to.');
+    }
   }
 
-  if (newPage) {
-      this.page = newPage;
-      await this.page.bringToFront(); // Bring the new page to the front
-  } else {
-      throw new Error("No new window/tab was found.");
+  async switchTo(urlPart) {
+    const pages = await this.page.browser().pages();
+    for (const p of pages) {
+      if (p.url().includes(urlPart)) {
+        await p.bringToFront();
+        this.page = p;
+        return p;
+      }
+    }
+    throw new Error(`No page found with URL containing '${urlPart}'`);
   }
-}
+
+  async isVisibleInViewport(selector) {
+    for (let i = 0; i < 5; i++) {
+      try {
+        const isVisible = await this.page.evaluate((selector) => {
+          const elem = document.querySelector(selector);
+          if (!elem) return false;
+
+          const box = elem.getBoundingClientRect();
+          const cx = box.left + box.width / 2;
+          const cy = box.top + box.height / 2;
+          const e = document.elementFromPoint(cx, cy);
+
+          for (let currentElement = e; currentElement; currentElement = currentElement.parentElement) {
+            if (currentElement === elem) {
+              return true;
+            }
+          }
+          return false;
+        }, selector);
+
+        if (isVisible) {
+          return true;
+        }
+      } catch (error) {
+      }
+
+      await this.page.waitForTimeout(300);
+    }
+    return false;
+ }
+
+  async setLocalStorageToNotShowJoinPushModal() {
+    await this.page.evaluate(() => {
+      localStorage.setItem('acelab.sute', '1973094957000');
+      sessionStorage.setItem('pageCounter', '-15');
+    });
+  }
   
+  async getList(xpath) {
+    
+    const elements = await this.page.$x(xpath);
+  
+    if (!elements.length) {
+      throw new Error(`No elements found for XPath: ${xpath}`);
+    }
 
+    const elementsText = [];
+    for (const element of elements) {
+      const text = await element.evaluate(el => el.textContent.trim());
+      elementsText.push(text);
+    }
+    return elementsText.join('\n');
+  }
 }
+
+const Settings = {
+  UrlBase: "https://acelab-public-site-",
+  UrlEnd: "-vnhmkx7udq-uk.a.run.app/"
+};
+
+const Setting = {
+  TestEnvironment: "qa-environment"
+};
 
 module.exports = CommonPage;
