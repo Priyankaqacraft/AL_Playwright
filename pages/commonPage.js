@@ -486,6 +486,43 @@ async refreshPage() {
     }
     return elementsText.join('\n');
   }
+
+  async isVisibleInViewport(xpath) {
+    for (let i = 0; i < 5; i++) {
+      try {
+        const elementHandle = await this.page.$x(xpath);
+  
+        if (elementHandle.length === 0) {
+          return false; // Element not found
+        }
+  
+        const isVisible = await this.page.evaluate((elem) => {
+          if (!elem) return false;
+  
+          const box = elem.getBoundingClientRect();
+          const cx = box.left + box.width / 2;
+          const cy = box.top + box.height / 2;
+          const e = document.elementFromPoint(cx, cy);
+  
+          for (let currentElement = e; currentElement; currentElement = currentElement.parentElement) {
+            if (currentElement === elem) {
+              return true;
+            }
+          }
+          return false;
+        }, elementHandle[0]); 
+  
+        if (isVisible) {
+          return true;
+        }
+      } catch (error) {
+        console.error("Error in checking element visibility:", error);
+      }
+  
+      await this.page.waitForTimeout(300);
+    }
+    return false;
+  }
 }
 
 const Settings = {
