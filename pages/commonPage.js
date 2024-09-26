@@ -4,14 +4,13 @@ import path from 'path';
 import pdf from 'pdf-parse';
 import { activeBaseUrl } from '../utils/config';
 
-
 class CommonPage {
   constructor (page) {
     this.page = page;
   }
 
   async performClick (viewXPath) {
-    await this.page.waitForXPath(viewXPath, { timeout: 40000 });
+    await this.page.waitForXPath(viewXPath, { visible : true });
     const [element] = await this.page.$x(viewXPath);
     if (element) {
       await Promise.all([element.click(), this.wait(3)]);
@@ -486,6 +485,218 @@ async refreshPage() {
     }
     return elementsText.join('\n');
   }
+<<<<<<< Updated upstream
+=======
+
+  async getMetaContentByCharset(charset) {
+    const metaElement = await this.page.locator(`meta[charset='${charset}']`);
+    return metaElement.getAttribute('content');
+  }
+
+  async isMetaCharsetPresent(charset) {
+    const metaElement = await this.page.locator(`meta[charset='${charset}']`);
+    return await metaElement.count() > 0;
+  }
+
+  async waitForLoadComplete() {
+
+    await new Promise(resolve => setTimeout(resolve, 8000));
+
+    try {
+        
+        await this.page.waitForSelector('.nuxt-progress', { hidden: true });
+    } catch (error) {
+      
+        console.error("Error in waitForLoadComplete:", error);
+    }
+}
+
+async isElementDisplayed(xpath) {
+  await this.page.waitForXPath(xpath, { visible : true });
+  const elements = await this.page.$x(xpath);
+  return elements.length > 0 && await this.page.evaluate(el => el.offsetParent !== null, elements[0]);
+}
+
+  async selectDropdownOptionByText1(viewXPath, optionText, timeout = 10000) {
+    try {
+      // Wait for the dropdown to appear in the DOM
+      await this.page.waitForXPath(viewXPath, { timeout });
+
+      // Find the dropdown element
+      const dropdown = await this.page.$x(viewXPath);
+
+      if (dropdown.length === 0) {
+        throw new Error(`Dropdown not found: ${viewXPath}`);
+      }
+
+      // Click on the dropdown to reveal options
+      await dropdown[0].click();
+      await this.page.waitForTimeout(500); // Adding delay
+      // Construct XPath for the option with the specific text
+      const optionXPath = `(${viewXPath}//option[contains(text(),'${optionText}')])[1]`;
+
+      console.log("optionxpath: " + optionXPath)
+      // Wait for the option to be available
+      await this.page.waitForXPath(optionXPath, { timeout });
+
+      // Scroll option into view
+      await this.page.evaluate((optionXPath) => {
+        const option = document.evaluate(optionXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        if (option) option.scrollIntoView();
+      }, optionXPath);
+
+      await this.page.evaluate((optionXPath) => {
+        const option = document.evaluate(optionXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+        if (option) option.click();
+      }, optionXPath);
+
+      console.log("Option clicked");
+
+      return true;
+    } catch (error) {
+      console.error(`Error selecting dropdown option: ${error}`);
+      return false;
+    }
+  }
+
+  async selectDropdownOptionByText(viewXPath, optionText) {
+    try {
+        // Ensure the element is present in the DOM
+        await this.page.waitForXPath(viewXPath, { timeout: 10000 });
+
+        // Evaluate the selection
+        await this.page.evaluate((viewXPath, optionText) => {
+            const selectElement = document.evaluate(viewXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+            if (selectElement) {
+                const options = Array.from(selectElement.options);
+                const option = options.find(opt => opt.text === optionText);
+                if (option) {
+                    selectElement.value = option.value;
+                    selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+                } else {
+                    console.error("Option not found: " + optionText);
+                }
+            } else {
+                console.error("Select element not found: " + viewXPath);
+            }
+        }, viewXPath, optionText);
+
+    } catch (error) {
+        console.error(`Error selecting dropdown option: ${error}`);
+    }
+}
+
+async selectDropdownOptionByIndex(viewXPath, index) {
+  await this.page.evaluate((viewXPath, index) => {
+      const selectElement = document.evaluate(viewXPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+      if (selectElement && index >= 0 && index < selectElement.options.length) {
+          selectElement.selectedIndex = index;
+          selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+  }, viewXPath, index);
+}
+
+  async getTabIndex(page) {
+    try {
+      const pages = await this.page.browser().pages();
+
+      // Find the index of the current page in the list of pages
+      const tabIndex = pages.findIndex(p => p === this.page);
+
+      if (tabIndex === -1) {
+        throw new Error("Current page not found in the list of tabs.");
+      }
+
+      return tabIndex;
+    } catch (error) {
+      console.error("Failed to get tab index:", error);
+      return -1; // Return -1 if the tab index couldn't be determined
+    }
+  }
+
+  async switchToTabByIndex(page, tabIndex) {
+    try {
+      await this.wait();
+      const pages = await this.page.browser().pages();
+
+      console.log(`Total pages open: ${pages.length}`);
+      if (tabIndex < 0 || tabIndex >= pages.length) {
+        console.error(`Tab index ${tabIndex} is out of bounds.`);
+        return false;
+      }
+
+      const targetPage = pages[tabIndex];
+
+      await targetPage.bringToFront();
+
+      // Confirm the tab switch by logging the title
+      const title = await targetPage.title();
+      // console.log(Switched to tab index ${tabIndex} with title: ${title});
+
+      return targetPage;
+    } catch (error) {
+      console.error(`Failed to switch to tab ${tabIndex}:`, error);
+      return false;
+    }
+  }
+
+  async getPageTitle(page) {
+    try {
+      const title = await page.title();
+      return title;
+    } catch (error) {
+      console.error("Failed to get page title:", error);
+      return null; // Return null if the title couldn't be retrieved
+    }
+  }
+
+  async getParagraphText(xpath) {
+    await this.page.waitForXPath(xpath, { visible : true });
+    const element = await this.page.$x(xpath);
+    if (element.length > 0) {
+        return await this.page.evaluate(el => el.innerText.trim(), element[0]);
+    } else {
+        throw new Error(`Element with XPath ${xpath} not found`);
+    }
+  }
+
+  async isVisibleInViewportXpath(xpath) {
+    for (let i = 0; i < 5; i++) {
+      try {
+        const elementHandle = await this.page.$x(xpath);
+  
+        if (elementHandle.length === 0) {
+          return false; // Element not found
+        }
+  
+        const isVisible = await this.page.evaluate((elem) => {
+          if (!elem) return false;
+  
+          const box = elem.getBoundingClientRect();
+          const cx = box.left + box.width / 2;
+          const cy = box.top + box.height / 2;
+          const e = document.elementFromPoint(cx, cy);
+  
+          for (let currentElement = e; currentElement; currentElement = currentElement.parentElement) {
+            if (currentElement === elem) {
+              return true;
+            }
+          }
+          return false;
+        }, elementHandle[0]); 
+  
+        if (isVisible) {
+          return true;
+        }
+      } catch (error) {
+        console.error("Error in checking element visibility:", error);
+      }
+  
+      await this.page.waitForTimeout(300);
+    }
+    return false;
+  }
+>>>>>>> Stashed changes
 }
 
 const Settings = {
