@@ -4,6 +4,7 @@ export const Paths = {
     Analytics: 'analytics',
     Admin: 'admin', 
     AllCategories: 'all-categories',
+    ArticlesDetails:'articles/technology/technology-is-renovating-the-construction-industry-2',
     Articles: 'articles',
     BIM: 'bim',
     CADAndDetails: 'cad-and-details',
@@ -35,6 +36,8 @@ export const Paths = {
     MyProjects: 'my-projects',
     PrivacyPolicy: 'privacy-policy',
     ProductResearch: 'product-research',
+    WindowsProductAdvisor:"divisions/windows/product-advisor",
+    ProductNewSearch:"divisions/new-search",
     Project: 'project',
     ProjectInfo: 'project-info',
     ProjectSearch: 'my-searches', 
@@ -48,5 +51,6 @@ export const Paths = {
     Window: 'window',
     Windows: 'windows',
     Library: 'my-library' ,
-    MyConversations: 'my-conversations'
+    MyConversations: 'my-conversations',
+    DefaultArticle: "/technology/technology-is-renovating-the-construction-industry-2"
 };
