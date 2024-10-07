@@ -5,9 +5,8 @@ class LoginPage extends CommonPage{
     constructor(page) {
         super(page);
         this.page = page;
-        this.signinButton="(//*[local-name()='g'][@id='Desktop_Logo'])[1]/parent::*/parent::*/parent::div/following-sibling::div/div[1]/button[text()='Sign In']";
-        this.joinforfreeButton="(//*[local-name()='g'][@id='Desktop_Logo'])[1]/parent::*/parent::*/parent::div/following-sibling::div/div[1]/button[text()='Join For Free']"
-        this.joinforfreeButtonCount="//button[@id='desktop-signup-button']"
+        this.joinforfreeButton="(//a[@id='desktop-signup-button'])[1]";
+        this.joinforfreeButtonCount="//a[@id='desktop-signup-button']";
         this.forManufacturersButton="//span[text()='FOR MANUFACTURERS']";
         this.scheduleAnIntroCall="//a[text()='Schedule an intro call']";
         this.discoverHowItWorks="//p[text()='Discover how it works']";
@@ -18,11 +17,16 @@ class LoginPage extends CommonPage{
         this.ResourceAndEducationHeader="//p[text()='Resources & Education']";
         this.faqHeader="//h2[text()='FAQ']";
         this.welcomeBackHomePage="//h1[contains(text(),'Welcome Back')]";
+        this.signinButton = "//a[@id='desktop-login-button']"
+        this.email_field = "//input[@id='signin-email']";
+        this.password_field = "//input[@id='signin-pass']";
+        this.login_btn = "//button[@type='submit']";
+        this.forgot_password_link = "//a[text()='Forgot Password?']";
+        this.signinHeading="//h1"
         
     }
 
-
-    
+   
 }
 
 export default LoginPage;
