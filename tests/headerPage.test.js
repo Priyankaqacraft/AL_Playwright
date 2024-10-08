@@ -74,7 +74,6 @@ describe('Author: ', () => {
           await commonPage.performClick(headerPage.close_modal);
         }
         await commonPage.performClick(headerPage.join_us_button);
-        //expect(await commonPage.isElementExists(headerPage.signupwith_google_button)).toBe(true);
         const modalText = await commonPage.getElementText(headerPage.signup_heading);
         console.log('modaltext value is:' + modalText);
         expect(modalText).toContain("Let's Get Started");
@@ -137,7 +136,6 @@ describe('Author: ', () => {
     });
   }, 10000);
 
-
   it(`It should verify Test verification related Search Page`, async () => {
 
     try {
@@ -150,15 +148,14 @@ describe('Author: ', () => {
       console.log("received url is:" + url);
       console.log("Expected url is:" + expected_url);
       assert.strictEqual(expected_url, url);
-      //await commonPage.wait(3);
       await commonPage.clearAndSendKeys(headerPage.searchbar, "tttt");
       await commonPage.wait(10);
       const message = await commonPage.getElementText(headerPage.searchnot_found);
       console.log("value is:" + message);
       expect(await commonPage.getElementText(headerPage.searchnot_found)).toBe("No results found. Try searching for keywords related to articles, details or courses.");
       await commonPage.wait(10);
-     // await commonPage.clearAndSendKeys(headerPage.searchbar, "cladding");
-      //await commonPage.isElementDisplayed(headerPage.search_suggest_input)
+      await commonPage.clearAndSendKeys(headerPage.searchbar, "cladding");
+      await commonPage.isElementDisplayed(headerPage.search_suggest_input)
       await headerPage.signOut();
     }
     catch (error) {
@@ -237,6 +234,43 @@ describe('Author: ', () => {
       console.log("URL of Aboutus page link is :" + currentUrl);
       console.log("Expected url is:" + expected_url);
       assert.strictEqual(expected_url, currentUrl);
+    } catch (error) {
+      await captureAndAttachScreenshot(page, 'SignInButton_HomePage');
+      throw error;
+    }
+  });
+
+ it('It should verify that manufacture get logged in "Dashboard" button is displayed on top right corner', async () => {
+
+    try {
+      await page.goto(activeBaseUrl);
+      await performLogins(page, "mfgRep");
+      const buttonname=await commonPage.getElementText(headerPage.dashboardbutton);
+      const Expectedbuttonname= "Dashboard";
+      console.log("Button text is :"+buttonname);
+      assert.strictEqual(Expectedbuttonname, buttonname);
+      await commonPage.isElementExists(headerPage.dashboardbutton,10000)
+      await headerPage.signOut();
+
+    } catch (error) {
+      await captureAndAttachScreenshot(page, 'SignInButton_HomePage');
+      throw error;
+    }
+  });
+
+  it('It should verify that Architecture get logged in "Project" button is displayed on top right corner', async () => {
+
+    try {
+      await page.goto(activeBaseUrl);
+      await performLogins(page, "regression");
+      await commonPage.waitForLoadComplete();
+      const buttonname=await commonPage.getElementText(headerPage.projectButton);
+      const Expectedbuttonname= "Projects";
+      console.log("Button text is :"+buttonname);
+      assert.strictEqual(Expectedbuttonname, buttonname);
+      await commonPage.isElementExists(headerPage.projectButton,10000)
+      await headerPage.signOut();
+
     } catch (error) {
       await captureAndAttachScreenshot(page, 'SignInButton_HomePage');
       throw error;
