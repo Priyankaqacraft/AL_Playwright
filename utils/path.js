@@ -52,4 +52,5 @@ export const Paths = {
     Windows: 'windows',
     Library: 'my-library' ,
     MyConversations: 'my-conversations',
+    DefaultArticle: "technology/technology-is-renovating-the-construction-industry-2"
 };
