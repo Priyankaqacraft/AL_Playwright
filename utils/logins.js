@@ -48,7 +48,7 @@ async function loginToAcelab(page, loginType) {
   await page.waitForTimeout(5000);
 
   await Promise.all([
-    page.click(`button[id='desktop-login-button']`),
+    page.click(`a[id='desktop-login-button']`),
   ])
   await page.waitForTimeout(4000);
   await page.type(`input[id='signin-email']`, email)
@@ -58,7 +58,7 @@ async function loginToAcelab(page, loginType) {
   await page.waitForTimeout(500);
   await Promise.all([
     page.click(`button[type='submit']`),
-    page.waitForNavigation({ waitUntil: 'networkidle0' }),
+    page.waitForNavigation({ waitUntil: 'networkidle0', timeout: 60000 }),
   ])
   await page.waitForTimeout(1000);
 
