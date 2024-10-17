@@ -25,7 +25,9 @@ class LoginPage extends CommonPage{
         this.signinHeading="//h1";
         this.emailError='//span[@id="vee_Email"]';
         this.passwordError="//span[@id='vee_Password']"
-        
+        this.emailformatvalidation='//span[contains(@id,"vee_Email")]'
+        this.eyeicon='//button//*[local-name()="svg"]'
+        this.signup_link='//a[@href="/signup"]'         
     }
     async verifyLockedAccountMessage() {
         let lockedAccountMessageDisplayed = false;
@@ -49,9 +51,6 @@ class LoginPage extends CommonPage{
           await this.page.waitForTimeout(300);
         }
         return false;
-      }
-
-   
+      } 
 }
-
 export default LoginPage;
