@@ -27,13 +27,15 @@ class webinar extends CommonPage{
         this.registerButton='//span[contains(text(),"Create")]';
         this.continueButton='//a[@href="/home"]';
         this.heading='//h1';
+        this.cmpname='//input[contains(@placeholder,"company")]'
         //this.closeSigninModal='//button[@id="close-modal-button"]'
         /*****************/
         this.fNameinput='//input[@name="registration-fn"]';
         this.lNameinput='//input[@name="registration-ln"]';
         this.emlinput='//input[@name="signin-email"]';
         this.companyNameInput='//input[@placeholder="Find your company"]';
-        this.emailexist ='//span[@id="vee_Email"]';
+        this.emailexist ='//span[contains(text(),"This")]';
+        this.emailrequired='//span[contains(@id,"vee_Email")]';
         this.fnamevalidation='//span[@id="vee_First Name"]';
         this.lnamevalidation='//span[@id="vee_Last Name"]';
         this.compnamevalidation='//span[contains(@id,"vee_Company")]';
