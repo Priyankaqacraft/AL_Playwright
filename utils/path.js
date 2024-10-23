@@ -10,7 +10,7 @@ export const Paths = {
     CADAndDetails: 'cad-and-details',
     Catalogs: 'catalogs',
     Certifications: 'certifications',
-    ChangePassword: 'change-password',
+    ChangePassword: 'myaccount/change-password',
     Collections: 'collections',
     CompareProduct: 'compare/windows?project=d8836e9a-651d-4265-bfa0-de8298c75fc5',
     CompareProductV2: 'compare/v2?ids=',
@@ -52,5 +52,5 @@ export const Paths = {
     Windows: 'windows',
     Library: 'my-library' ,
     MyConversations: 'my-conversations',
-    DefaultArticle: "/technology/technology-is-renovating-the-construction-industry-2"
+    DefaultArticle: "technology/technology-is-renovating-the-construction-industry-2"
 };
