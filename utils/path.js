@@ -3,6 +3,7 @@ export const Paths = {
     Accessibility: 'accessibility',
     Analytics: 'analytics',
     Admin: 'admin', 
+    AdminManufacturer: 'admin/manufacturers', 
     AllCategories: 'all-categories',
     ArticlesDetails:'articles/technology/technology-is-renovating-the-construction-industry-2',
     Articles: 'articles',
@@ -52,5 +53,8 @@ export const Paths = {
     Windows: 'windows',
     Library: 'my-library' ,
     MyConversations: 'my-conversations',
-    DefaultArticle: "technology/technology-is-renovating-the-construction-industry-2"
+    DefaultArticle: "/technology/technology-is-renovating-the-construction-industry-2",
+    webinarRegistration:"/events/fire-rated-head-of-wall-joint-assemblies-considerations-for-design-professionals",
+    DivisionProductDetail :"/windows/75b4e882-d871-42e7-ae4e-84143ee6eed2?projectId=e6f5b1f7-cb9d-4d13-9cf8-2e5be2d9fb37",
+    WindowSearchResultPage: "/windows/results?searchId=785657c4-6c51-49ea-ad1b-df48fde90681&page=1"
 };
