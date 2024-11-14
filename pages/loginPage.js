@@ -24,10 +24,11 @@ class LoginPage extends CommonPage{
         this.forgot_password_link = "//a[text()='Forgot Password?']";
         this.signinHeading="//h1";
         this.emailError='//span[@id="vee_Email"]';
-        this.passwordError="//span[@id='vee_Password']"
-        this.emailformatvalidation='//span[contains(@id,"vee_Email")]'
-        this.eyeicon='//button//*[local-name()="svg"]'
-        this.signup_link='//a[@href="/signup"]'         
+        this.passwordError="//span[@id='vee_Password']";
+        this.emailformatvalidation='//span[contains(@id,"vee_Email")]';
+        this.eyeicon='//button//*[local-name()="svg"]';
+        this.signup_link='//a[@href="/signup"]' ;  
+        this.invaliderror='//div[contains(text(),"Incorrect email address or password")]';
     }
     async verifyLockedAccountMessage() {
         let lockedAccountMessageDisplayed = false;
