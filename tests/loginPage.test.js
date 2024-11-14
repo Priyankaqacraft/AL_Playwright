@@ -37,7 +37,7 @@ describe('Author: ', () => {
 
     });
 
-    it("Should verify that an admin type user can successfully sign in and is taken to admin page", async () => {
+   it("Should verify that an admin type user can successfully sign in and is taken to admin page", async () => {
 
         try {
             await performLogins(page, "admin");
@@ -72,7 +72,7 @@ describe('Author: ', () => {
        }
    })*/
 
-    it("Should verify that Sign in page has a forgot password link that takes to the forgot password page", async () => {
+   it("Should verify that Sign in page has a forgot password link that takes to the forgot password page", async () => {
 
         try {
             await page.goto(activeBaseUrl);
@@ -90,6 +90,7 @@ describe('Author: ', () => {
     it("Should verify that a non-admin user can not access admin page- It is a bug", async () => {
 
         try {
+            await page.goto(activeBaseUrl);
             await performLogins(page, acelabAdminCredentials);
             await commonPage.waitForLoadComplete();
             await commonPage.navigateTo(Paths.Admin);
@@ -104,19 +105,22 @@ describe('Author: ', () => {
             throw error;
         }
     })
-    //bug is there for below test case
-  /*  it("Should verify that Invalid username and password not allow to do login and show error toast- it is a bug", async () => {
+    it("Should verify that Invalid username and password not allow to do login and show error toast- it is a bug", async () => {
 
         try {
-            await performLogins(page, "invalidusercredential");
             await commonPage.waitForLoadComplete();
-            //await commonPage.getElementsTextByTagName(); //get error message from UI and store here
-
+           await commonPage.performClick(loginPage.signinButton);
+           await commonPage.clearAndSendKeys(loginPage.email_field ,"qaautomation+01manufact@acelabusa.com");
+           await commonPage.clearAndSendKeys(loginPage.password_field,"Rain777@");
+           await commonPage.performClick(loginPage.login_btn);
+            const errormessage= await commonPage.getElementText(loginPage.invaliderror); 
+            expect("Incorrect email address or password.").toEqual(errormessage);
+           
         } catch (error) {
             await captureAndAttachScreenshot(page, '');
             throw error;
         }
-    }) */
+    }) 
     it("Should verify that when no value in emailid and password textbox. validation message showing", async () => {
 
         try {
@@ -139,7 +143,9 @@ describe('Author: ', () => {
             await commonPage.clearAndSendKeys(loginPage.email_field, "rahultest");
             await commonPage.clearAndSendKeys(loginPage.password_field, "Rain999@");
             await commonPage.isElementExists(loginPage.emailformatvalidation);
-            page.reload();
+            const errormessage = await commonPage.getElementText(loginPage.emailformatvalidation);
+            console.log('Error Message is :' + errormessage);
+       
 
         } catch (error) {
             await captureAndAttachScreenshot(page, '');
