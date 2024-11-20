@@ -33,8 +33,8 @@ class HeaderPage extends CommonPage{
         this.Aboutus='(//header//a[@href="/about-us"])[1]'
         this.forManufacturer='(//a[@href="/for-manufacturers"])[1]'
         this.dashboardbutton='//span[contains(text(),"Dashboard")]'  
-        this.projectButton='(//span[contains(text(),"Projects")])[1]'  
-        this.publicsiteButton='//span[contains(text(),"Public")]'    
+        this.projectButton='(//span[contains(text(),"Projects")])[1]' 
+        this.publicsiteButton='//span[contains(text(),"Public")]'     
     }
 
     

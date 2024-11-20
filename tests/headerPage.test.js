@@ -8,7 +8,7 @@ import { Paths } from '../utils/path'
 import HeaderPage from '../pages/headerPage';
 import { performLogins,  } from '../utils/logins';
 import loginPage from '../pages/loginPage';
-import windowSearchResultPage from '../pages/windowSearchResultPage';
+import WindowsSearchResultPage from '../pages/windowsSearchResultPage.js';
 const assert = require('assert')
 jest.setTimeout(80000);
 
@@ -20,7 +20,7 @@ describe('Author: ', () => {
     commonPage,
     headerPage,
     loginpage,
-    window,
+    windowsSearchResultPage,
     context,
     browser
 
@@ -33,11 +33,11 @@ describe('Author: ', () => {
     commonPage = new CommonPage(page);
     loginpage = new loginPage(page);
     headerPage = new HeaderPage(page);
-    window = new windowSearchResultPage(page);
+    windowsSearchResultPage = new WindowsSearchResultPage(page);
     browser = setupResults.browser;
     context = browser.defaultBrowserContext();
     
-    //await page.goto(activeBaseUrl,{ waitUntil: 'networkidle0', timeout: 120000 });
+    
 
   });
 
@@ -122,8 +122,8 @@ describe('Author: ', () => {
         await commonPage.navigateTo(extension_authenticatedpage, { waitUntil: 'networkidle0' });
         await commonPage.clearAndSendKeys(headerPage.searchbar, "Cladding");
         await commonPage.performClick(headerPage.search_suggest_input);
-        await commonPage.isElementDisplayed(window.product_image);
-        const modaltext = await commonPage.getElementsTextByTagName(window.productdisplaypage_title);
+        await commonPage.isElementDisplayed(windowsSearchResultPage.product_image);
+        const modaltext = await commonPage.getElementsTextByTagName(windowsSearchResultPage.productdisplaypage_title);
         expect(modaltext).toContain("Select a masonry pattern");
         await headerPage.signOut();
 
