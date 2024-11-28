@@ -36,7 +36,9 @@ class ManufacturerConversationPage extends CommonPage {
         this.expandbutton="(//span[@class='mr-4'])[1]";
         this.buttonpropertyafter="(//*[local-name()='svg' and @class='h-4 w-4 transition rotate-180'])[1]";
         this.buttonpropertybefore="(//*[local-name()='svg' and @class='h-4 w-4 transition'])[1]";
-        this.conversation="//div[contains(@class,'message-area-height')]"
+        this.conversation="//div[contains(@class,'message-area-height')]";
+        this.convname="((//table)[1]//child::p)[1]";
+        this.convarchitecname="(//div[@class='space-y-1'])[1]//child::p[last()]"
     }
 }
 export default ManufacturerConversationPage;
