@@ -36,7 +36,7 @@ describe('Author: ', () => {
         await teardown();
     });
 
-     it("Should Verify ", async () => {
+     it("Should Verify that when architecture raise any request info for product, that raised request will get displayed in admin panel >> request info tab", async () => {
         try {
             await performLogins(page, 'editable'); 
             await commonPage.enterText(adminInfoRequestPage.searchBar, 'H Window');
