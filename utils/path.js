@@ -32,6 +32,7 @@ export const Paths = {
     HowItWorks: 'how-it-works',
     Inspiration: 'inspiration',
     Manufacturer: 'manufacturers',
+    manufacture:'manufacturer',
     MyAccount: 'myaccount',
     Verificationlink: 'join-company?token=da077359-02c1-4d4b-8155-e6cb132d9c24',
     MyCollections: 'mycollections',
