@@ -31,7 +31,8 @@ export const Paths = {
     ForgotPassword: 'forgot-password',
     HowItWorks: 'how-it-works',
     Inspiration: 'inspiration',
-    Manufacturer: 'manufacturer',
+    Manufacturer: 'manufacturers',
+    manufacture:'manufacturer',
     MyAccount: 'myaccount',
     Verificationlink: 'join-company?token=da077359-02c1-4d4b-8155-e6cb132d9c24',
     MyCollections: 'mycollections',
@@ -61,5 +62,8 @@ export const Paths = {
     ManufactureBrandPage: '/abc-window-systems',
     ManufacturePDP: 'divisions/windows/abc-window-systems-casement-vinyl-window-side-hinged',
     ManufacturerList: 'manufacturers',
-    articleurl: '/what-s-new-at-acelab/demystifying-building-science-in-architecture'
+    articleurl: '/what-s-new-at-acelab/demystifying-building-science-in-architecture',
+    productadvisor:'product-advisor',
+    manufacturerDashboard : 'dashboard',
+    conversation:'/dashboard/conversations'
 };

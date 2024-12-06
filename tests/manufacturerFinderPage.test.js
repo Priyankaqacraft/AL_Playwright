@@ -1,6 +1,5 @@
 import { teardown, noLoginsetup } from './setup.js';
 import CommonPage from '../pages/commonPage.js';
-import { activeBaseUrl } from '../utils/config.js';
 import { captureAndAttachScreenshot } from '../utils/screenshotHelper.js';
 import HeaderPage from '../pages/headerPage.js';
 import { performLogins,  } from '../utils/logins.js';
@@ -41,46 +40,50 @@ describe('Author: ', () => {
     it('It should verify that Find Manufacturers page has expected top level filters', async () => {
 
       try {
+        const expected_filters = [
+          "00 Procurement and Contracting Requirements",
+          "01 General Requirements",
+          "02 Existing Conditions",
+          "03 Concrete",
+          "04 Masonry",
+          "05 Metals",
+          "06 Wood, Plastics, and Composites",
+          "07 Thermal and Moisture Protection",
+          "08 Openings",
+          "09 Finishes",
+          "10 Specialties",
+          "11 Equipment",
+          "12 Furnishings",
+          "13 Special Construction",
+          "14 Conveying Equipment",
+          "21 Fire Suppression",
+          "22 Plumbing",
+          "23 Heating, Ventilating, and Air Conditioning (HVAC)",
+          "25 Integrated Automation",
+          "26 Electrical",
+          "27 Communications",
+          "28 Electronic Safety and Security",
+          "31 Earthwork",
+          "32 Exterior Improvements",
+          "33 Utilities",
+          "34 Transportation",
+          "35 Waterway and Marine Construction",
+          "40 Process Interconnections",
+          "41 Material Processing and Handling Equipment",
+          "42 Process Heating, Cooling, and Drying Equipment",
+          "43 Process Gas and Liquid Handling, Purification, and Storage Equipment",
+          "44 Pollution and Waste Control Equipment",
+          "45 Industry-Specific Manufacturing Equipment",
+          "46 Water and Wastewater Equipment",
+          "48 Electrical Power Generation"
+                  ];
           await performLogins(page, "regression");
+          await commonPage.waitForLoadComplete();
           await commonPage.performClick(headerPage.manufactureLink);
-          const expected_filters = [
-"00 Procurement and Contracting Requirements",
-"01 General Requirements",
-"02 Existing Conditions",
-"03 Concrete",
-"04 Masonry",
-"05 Metals",
-"06 Wood, Plastics, and Composites",
-"07 Thermal and Moisture Protection",
-"08 Openings",
-"09 Finishes",
-"10 Specialties",
-"11 Equipment",
-"12 Furnishings",
-"13 Special Construction",
-"14 Conveying Equipment",
-"21 Fire Suppression",
-"22 Plumbing",
-"23 Heating, Ventilating, and Air Conditioning (HVAC)",
-"25 Integrated Automation",
-"26 Electrical",
-"27 Communications",
-"28 Electronic Safety and Security",
-"31 Earthwork",
-"32 Exterior Improvements",
-"33 Utilities",
-"34 Transportation",
-"35 Waterway and Marine Construction",
-"40 Process Interconnections",
-"41 Material Processing and Handling Equipment",
-"42 Process Heating, Cooling, and Drying Equipment",
-"43 Process Gas and Liquid Handling, Purification, and Storage Equipment",
-"44 Pollution and Waste Control Equipment",
-"45 Industry-Specific Manufacturing Equipment",
-"46 Water and Wastewater Equipment",
-"48 Electrical Power Generation"
-        ];
           await commonPage.performClick(headerPage.manufactureLink);
+          await page.setJavaScriptEnabled(false);
+           await page.setJavaScriptEnabled(true);
+          await commonPage.waitForLoadComplete();
           const filters=await finder.getFiltersText(finder.division_filters);
           expect(filters).toEqual(expected_filters);
   
@@ -90,7 +93,7 @@ describe('Author: ', () => {
       }
     });
 
-    it('It should verify that Find Manufacturers-> clicking a division takes us to division page with new filters', async () => {
+   it('It should verify that Find Manufacturers-> clicking a division takes us to division page with new filters', async () => {
 
       try {
           const expected_filters = [

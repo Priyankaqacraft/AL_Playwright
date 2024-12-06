@@ -1,0 +1,125 @@
+import puppeteer from 'puppeteer';
+import WindowDetailPage from './windowDetailPage';
+import CommonPage from './commonPage';
+class ProjectSchedulePage extends CommonPage {
+    constructor(page) {
+        super(page);
+        this.page = page;
+        this.commonPage = new CommonPage(page);
+        this.projectclick="//a[contains(@href,'/project/a5d73e2a-96cb')]";
+        this.schedule="(//span[contains(text(),'Schedules')])[1]";
+        this.noscheduletext="//main//h1//following-sibling::p";
+        this.addschedulebtn="//a[contains(text(),'Schedule')]";
+        this.schedulecategory="((//div[contains(@class,'lg:gap-6')])[1]//child::button)[1]";
+        this.scheduletable="//table";
+        this.masonrycategory="(//p[contains(text(),'Masonry')])[1]";
+        this.schedulepagecategoryadded="(//span[contains(@class,'gap-x-1')])[1]//child::span";
+        this.collumproduct="(//table//child::thead//child::p)[1]";
+        this.collumapproval="//p[contains(text(),'Approval')]";
+        this.collumMasterformat="//p[contains(text(),'Masterformat')]";
+        this.collumreps="//p[contains(text(),'Reps')]";
+        this.approvalbutton="//p[contains(text(),'Approval')]//parent::div//child::button";
+        this.editfield="//p[text()='Edit Field']";
+        this.approvalstts="//input[contains(@placeholder,'Option Name')]";
+        this.cancelbutton="//button[contains(text(),'Cancel')]";
+        this.buttontoaddcols="//*[local-name()='svg' and @class='inline-block h-4 w-4']";
+        this.edit="//p[text()='Edit Field']";
+        this.searchtextbox="//input[@placeholder='Search...']"
+        this.addcutomfiledbutton="//button[contains(text(),'Field')]";
+        this.addcancelbutton="//button[contains(text(),'Cancel')]";
+        this.searchresult="//span[contains(text(),'Product Tags')]";
+        this.producttagcoladded="//p[contains(text(),'Product Tags')]";
+        this.deletefieldbtn="//p[contains(text(),'Delete')]//ancestor::button";
+        this.producttagbtn="//p[contains(text(),'Product Tags')]//parent::div//child::button";
+        this.insertleft="//p[contains(text(),'Left')]";
+        this.insertright="//p[contains(text(),'Right')]";
+        this.hidefield="//p[contains(text(),'Hide')]";
+        this.deletefield="//p[contains(text(),'Delete')]";
+        this.approvalstatuscols="//p[contains(text(),'Approval Status')]";
+       this.deleteproceedbutton="//span[contains(text(),'Proceed')]//parent::button"
+        this.hidebutton="//span[contains(text(),'Hide')]";
+        this.approvalfiledinhiddenwindow="//span[contains(text(),'Approval')]";
+        this.approvaltoggle="(//button[contains(@class,'w-6')])[1]";
+        this.hiddenfield="//p[contains(text(),'hidden field')]";
+        this.hideall="//button[contains(text(),'Hide')]";
+        this.showall="//button[contains(text(),'Show')]";
+        this.nohiddenfield="//p[contains(text(),'No')]";
+        this.defaultviewbtn="//span[contains(text(),' Default ')]//ancestor::button";
+        this.viewthreeedots="//button[contains(@class,' focus:ring-1 focus:ring-border')]";
+        this.viewcreated="(//ul[contains(@class,'space-y-[2px] ')])[1]//child::li//child::span";
+        this.cantupdatedefaultview="//div[contains(text(),'Cannot change')]";
+        this.vieweditbtn="//span[contains(text(),'Edit')]";
+        this.viewupdatebtn="//span[contains(text(),'Update')]";
+        this.viewdeletebtn="//span[contains(text(),'Delete View')]";
+        this.delelteconfirm="//span[contains(text(),'Delete')]";
+        this.cantdeletetoast="//div[contains(text(),'Cannot delete')]";
+        this.createviewbtn="//span[text()='Create View']";
+        this.providenamemessage="//span[contains(text(),'Provide ')]";
+        this.createnewview="//button[contains(text(),'New View')]";
+        this.cancelbutton="//button[contains(text(),'Cancel')]";
+        this.viewmodalwindow="//div[contains(@class,'relative z-[999] ')]";
+        this.createviewtextbox="//input[@Placeholder='View name']";
+        this.addedview="(//li[contains(@class,'h-[50px] ')])[2]//child::span";
+        this.viewaddedtoast="//div[@role='alert']";
+        this.addedview3dots="(//li[contains(@class,'h-[50px] ')])[last()]//child::button";
+        this.editviewbtn="//span[text()='Edit View']";
+        this.deleteviewbtn="//span[text()='Delete View']";
+        this.updateviewbtn="//span[text()='Update View']";
+        this.deletemodaltext="//p[contains(text(),'Are')]";
+        this.deletebutton="//span[text()='Delete']";
+        this.filterbuttn="//span[contains(text(),'Filters')]//parent::button";
+        this.addconditionbutton="//span[text()=' + Add Condition ']//parent::button";
+        this.selectdropdown="(//button[contains(@class,'px-3 py-[5px]')])[1]";
+        this.dropdownvaluestatus="//span[contains(text(),'Approval Status')]";
+        this.dropdownvaluenumber="//span[contains(text(),'Number_field')]";
+        this.seconddropdown="(//button[contains(@class,'opacity-50')])[1]";
+        this.thirddropdown="(//button[contains(@class,'leading-[14px]')])[last()]";
+        this.selectspprovebycliet="(//span[contains(@class,'select-none')])[1]";
+        this.removefilterbutton="//div[@class='flex-grow']//following-sibling::button";
+        this.filterresult="//span[contains(text(),'Approved by Client')]";
+        this.addgroupcondition="//span[text()=' + Add Group Condition ']";
+        this.addgroupplusicon="(//div[@class='flex justify-between']//child::button)[1]";
+        this.groupconditionremovebutton="(//div[@class='flex justify-between']//child::button)[last()]";
+        this.group1stdropdown="(//div[@class='my-2.5 space-y-2.5']//child::button)[1]";
+        this.numberfieldvalue="//span[contains(text(),'Number_field')]";
+        this.inputtextbox="//input[@placeholder='Search query']";
+        this.filterresult="//div[contains(@class,'truncate ')]//child::span";
+        this.sortbuttontool="//span[contains(text(),'Sort')]";
+        this.sortinglink="//button[contains(text(),'Sort')]";
+        this.sortfirstdropdown="//button[contains(text(),'Select an option')]";
+        this.ftolsorting="//button[contains(text(),'First to Last')]";
+        this.ltofsorting="//span[contains(text(),'Last to First')]";
+        this.sortbutton="//button[contains(text(),'Cancel')]//following-sibling::button";
+        this.sortinfresult="//td[@data-column='5']//child::span";
+        this.firstdropdownvalue="//span[contains(text(),'Approval ')]"
+         this.seconddropdownvalue="//span[contains(text(),'Number_field')]"
+        this.removesortingbutton="//button[@class='p-2']";
+        this.ltof="//button[contains(text(),'Last to First')]";
+        this.ftol="//span[contains(text(),'First to Last')]";
+        this.heighttool="//span[contains(text(),'Height')]";
+        this.heightsmall="//span[contains(text(),'Small')]";
+        this.heightlarge="//span[contains(text(),'Large')]";
+        this.heightmedium="//span[contains(text(),'Medium')]";
+        this.heightofrow="(//div[contains(@class,'focus-visible:outline-0')])[1]";
+        this.exportTool="//span[text()='Export']//ancestor::button";
+        this.threedotsbutton="(//button[contains(@class,'text-navy-black')])[last()]";
+        this.copyproductbutton="//p[contains(text(),'Copy')]//ancestor::button";
+        this.noproductmessage="//p[contains(text(),'You ')]";
+        this.productcheckbox="//p[contains(text(),'1')]";
+        this.checkbox="(//div[contains(@class,'control-group ')])[1]//*//child::input"
+        this.firstprojecttocopy="//span[text()='Co-ed school']";
+        this.sourceproductname="//a[contains(@href,'/glass%20metal%20craft')]";
+        this.productcopiedmessage="//div[contains(text(),'Product copied successfully')]";
+        this.projectlustclick="//h1//parent::div";
+        this.removeproductbutton="//p[contains(text(),'Remove')]//ancestor::button";
+        this.deleteschedulebutton="//p[contains(text(),'Delete')]//ancestor::button";
+        this.deleteproductmessage="(//div[@class='pt-5']//child::p)[1]";
+        this.removeproductcancelbutton="//span[contains(text(),'CANCEL')]//parent::button";
+        this.deleteschedulemessage="//p[contains(text(),'delete this')]";
+        this.deleteschedulecancelbutton="(//div[contains(@class,'justify-end gap-4')]//child::button)[1]";
+        this.approvaltoggleon="((//li[contains(@class,'hover:bg-light-gray')])//child::button)[1]";
+        this.deletescheduleproceed="//span[contains(text(),'Delete')]//parent::button"
+
+    }
+}
+export default ProjectSchedulePage;
