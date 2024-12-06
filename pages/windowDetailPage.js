@@ -7,6 +7,7 @@ class WindowDetailPage extends CommonPage {
     constructor(page, downloadPath) {
         super(page);
         this.page = page;
+        this.commonPage = new CommonPage(page);
         this.downloadPath = downloadPath;
         this.design_options_section_headline = "//p[contains(text(),'Product Description')]";
         this.product_info_manufacturer = "//a[contains(text(),\"Andersen Windows, Inc.\")]";
@@ -30,7 +31,7 @@ class WindowDetailPage extends CommonPage {
         this.product_info_series = "(//span[contains(text(),'E Series')])[1]";
         this.product_info_section_additional_tags = "//div[@id='tooltip']//div";
         this.download_documents_button = "(//span[contains(text(),'MB')])[1]";
-        this.download_documents_modal_download_button = "//h3[contains(text(),'Downloads')]//following::img[2]//parent::div";
+        this.download_documents_modal_download_button = "//span[contains(text(),'Clad Wood E Series Size Chart')]";
         this.design_options_section_headline = "//p[contains(text(),'Product Description')]";
         this.finish_colors_tile_title = "//div[contains(@class,'text-center')]//p[@class='text-sm font-bold']";
         this.hardware_finish_colors_images = "//div[contains(@class,'relative p')]";
@@ -77,37 +78,39 @@ class WindowDetailPage extends CommonPage {
         this.txtProductfooter = "(//p[contains(text(),'Double Hung')])[2]";
         this.firstNextButton ="//button[contains(text(),'Next')]";
         this.finishButton="//button[contains(text(),'Finish')]"
-        this.startOver="//span[contains(text(),'Start ')]//ancestor::button"
-        this.addproduct="(//*[local-name()='svg' and @class='h-4 w-4'])[1]"
-        this.firstProductName="//a[contains(text(),'Double Hung  - Bronze')]"
-        this.removeProduct="(//*[local-name()='svg' and @class='hidden h-4 w-4 group-2-hover:inline-block'])"
-        this.alert="//div[contains(text(),'Product removed from project.')]"
+        this.startOver="//span[contains(text(),'Start ')]//ancestor::button";
+        this.addproduct="(//span[text()='Add'])[1]";
+        this.firstProductName="//a[contains(text(),'Double Hung  - Bronze')]";
+        this.removeProduct="//span[text()='Remove']";
+        this.alert="//div[contains(text(),'Product removed from project.')]";
+        this.firstProductDoubleHung="(//a[contains(text(),'Double Hung')])[1]";
+        this.txtWIndowsSearch = "//h3[text()='Windows Search']";
     }
-
-    async checkFileDownloaded(filename) {
-        const maxRetries = 5;
-        const retryInterval = 500; 
-        const freshnessDuration = 2 * 60 * 1000; 
-
-        for (let i = 0; i < maxRetries; i++) {
-            const files = fs.readdirSync(this.downloadPath);
-            const matchedFile = files
-                .map(file => ({
-                    name: file,
-                    fullPath: path.join(this.downloadPath, file),
-                    lastWriteTime: fs.statSync(path.join(this.downloadPath, file)).mtime
-                }))
-                .filter(file => file.name.includes(filename))
-                .sort((a, b) => b.lastWriteTime - a.lastWriteTime)[0]; 
-            if (matchedFile) {
-                const isFresh = Date.now() - matchedFile.lastWriteTime.getTime() < freshnessDuration;
-                fs.unlinkSync(matchedFile.fullPath);  
-                return isFresh;
+        async checkFileDownloaded(filename) {
+            const maxRetries = 10;
+            const retryInterval = 1000; 
+            const freshnessDuration = 2 * 60 * 1000; 
+            const currentDate = new Date().toISOString().slice(0, 10).replace(/-0(\d)$/, '-$1');
+            for (let i = 0; i < maxRetries; i++) {
+                const files = fs.readdirSync(this.downloadPath);
+                const matchedFile = files
+                    .map(file => ({
+                        name: file,
+                        fullPath: path.join(this.downloadPath, file),
+                        lastWriteTime: fs.statSync(path.join(this.downloadPath, file)).mtime
+                    }))
+                    .filter(file => file.name.includes(filename) && file.name.includes(currentDate))
+                    .sort((a, b) => b.lastWriteTime - a.lastWriteTime)[0];
+        
+                if (matchedFile) {
+                    const isFresh = Date.now() - matchedFile.lastWriteTime.getTime() < freshnessDuration;
+                    fs.unlinkSync(matchedFile.fullPath); 
+                    return isFresh; 
+                }
+                await new Promise(resolve => setTimeout(resolve, retryInterval));
             }
-            await new Promise(resolve => setTimeout(resolve, retryInterval));
+            return false;
         }
-        return false;
-    }
 
     async skipSuggestion(){
         await this.performClick(this.firstNextButton);

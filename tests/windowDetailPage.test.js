@@ -66,9 +66,9 @@ describe('Author: ', () => {
             await captureAndAttachScreenshot(page, 'Product Info');
             throw error;
         }
-    });     
+    });  
 
-    it("Should verify window detail home breadcrumb", async () => {
+     it("Should verify window detail home breadcrumb", async () => {
         try {
             await performLogins(page, 'regression');
             await commonPage.navigateTo(Paths.Divisions + Paths.WindowSearchResultPage);
@@ -92,16 +92,18 @@ describe('Author: ', () => {
             await captureAndAttachScreenshot(page, 'Windows Breadcrumb');
             throw error;
         }
-    }); 
+    });
 
     it("Should verify 'Back To Search' link maintains filters", async () => {
         
         try {
             await performLogins(page, 'regression');
             await commonPage.wait();
+
             await commonPage.hoverOverElement(windowDetailPage.productButton);
             await commonPage.performClick(windowDetailPage.windoesButton);
-
+            await page.setJavaScriptEnabled(false);
+            await page.setJavaScriptEnabled(true);
             const selectWindowType = await page.$x(windowDetailPage.txtSelectWindowType);
             const selectWindow = selectWindowType.length;
             if(selectWindow > 0)
@@ -119,32 +121,25 @@ describe('Author: ', () => {
                 await commonPage.wait();
                 await commonPage.wait();
                 const filterOptions = await commonPage.getList(windowDetailPage.filters);
-               
                 expect(filterOptions).toContain('Window Type\nProject\nFrame Material\nThermal Performance\nSpecial Requirements\nProfile Aesthetics');
                 await commonPage.wait();
-              
-                 await myAccountPage.logOut();
+                await myAccountPage.logOut();
             }
             else 
             {
                 await commonPage.wait();
                 await windowDetailPage.skipSuggestion();
-                await commonPage.wait();
-                await commonPage.wait();
                 const filterOptions = await commonPage.getList(windowDetailPage.filters);
                 console.log("Filter list is:"+filterOptions);
                 expect(filterOptions).toContain('Window Type\nProject\nFrame Material\nThermal Performance\nSpecial Requirements\nProfile Aesthetics');
                 await commonPage.waitForLoadComplete();
-              
-                 await myAccountPage.logOut();
-             
-    
+                await myAccountPage.logOut();
             }    
         } catch (error) {
             await captureAndAttachScreenshot(page, 'Back To Search link maintains filters');
             throw error;
         }
-    }); 
+    });
 
      it("Should verify Window detail download pdf button", async () => {
         try {
@@ -208,7 +203,7 @@ describe('Author: ', () => {
     it("Should verify Windows download documents rep connect", async () => {
 
         await commonPage.waitForLoadComplete();  
-        const downloadPath = path.resolve(__dirname, 'downloads');
+        const downloadPath = path.resolve(__dirname, '../downloads');
         try {
             await page._client.send('Page.setDownloadBehavior', {
                 behavior: 'allow',
@@ -216,14 +211,15 @@ describe('Author: ', () => {
             });
             const windowDetailPage = new WindowDetailPage(page, downloadPath);
             await commonPage.performClick(windowDetailPage.download_documents_modal_download_button);
-            const isDownloaded = await windowDetailPage.checkFileDownloaded('Andersen Windows Inc - Specialty Al. Clad Wood E Series Brochures-2024-11-8');
+            await commonPage.wait();
+            const isDownloaded = await windowDetailPage.checkFileDownloaded('Andersen Windows Inc - Specialty Al. Clad Wood E Series Size Chart');
             console.log(`File downloaded: ${isDownloaded}`);
             expect(isDownloaded).toBe(true);
         } catch (error) {
             await captureAndAttachScreenshot(page, 'Download Documents Button');
             throw error;
         }
-    });
+    }); 
 
     it("Should verify Windows detail page Product Description Text", async () => {
         try {
@@ -277,7 +273,7 @@ describe('Author: ', () => {
             throw error;
         }
     }); // URL Changed please chnage the new URL
-
+        
     it("Should verify Windows detail hardware about text of Picture window type", async () => {
         try {
             await performLogins(page, 'regression');
@@ -515,17 +511,13 @@ describe('Author: ', () => {
         try {
             const performancedataHeading = await commonPage.getElementText(windowDetailPage.performancedata_heading);
             expect(performancedataHeading).toContain('Performance Data');
-            await myAccountPage.logOut();
+            // await myAccountPage.logOut();
         } catch (error) {
             await captureAndAttachScreenshot(page, 'Performance Data Heading');
             throw error;
         }
-    }); 
-     
+    });  
 
-   
-
-  
     it("Should verify compare footer Saved Products for Text", async () => {
         try {
             const savedProductsForText = await commonPage.getElementText(windowDetailPage.compare_footer);
@@ -534,7 +526,5 @@ describe('Author: ', () => {
             await captureAndAttachScreenshot(page, 'Compare footer Saved Products for Text');
             throw error;
         } 
-    });    
-
-    
+    });
 });
