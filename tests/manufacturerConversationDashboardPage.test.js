@@ -104,8 +104,11 @@ describe('Author: ', () => {
 
     try {
       await commonPage.waitForLoadComplete();
+      const nameofarch=await commonPage.getElementText(manufacturer.convname);
       await commonPage.performClick(manufacturer.firstconv);
       await commonPage.isElementExists(manufacturer.conversation);
+      const nameofarchconv=await commonPage.getElementText(manufacturer.convarchitecname);
+      assert.strictEqual(nameofarch,nameofarchconv)
       await commonPage.performClick(manufacturer.backbutton);
       const openedurl = await commonPage.getCurrentUrl();
       const expectedurl = (activeBaseUrl + Paths.manufacturerDashboard);
@@ -116,7 +119,7 @@ describe('Author: ', () => {
       throw error;
     }
   });
-  it('It should verify that In conversation ,Manufacturer can add contact owner', async () => {
+ it('It should verify that In conversation ,Manufacturer can add contact owner', async () => {
 
     try {
       await commonPage.performClick(manufacturer.addbutton);
@@ -156,7 +159,7 @@ describe('Author: ', () => {
       await commonPage.isElementExists(manufacturer.newinquirystts);
       await commonPage.isElementExists(manufacturer.checkbox);
       const statuslist = await finder.getFiltersText(manufacturer.statuslist);
-      expect(expected_status).toEqual(expected_status);
+      expect(expected_status).toEqual(statuslist);
 
 
     } catch (error) {

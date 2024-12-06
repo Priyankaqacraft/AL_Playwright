@@ -59,7 +59,7 @@ describe('Author: ', () => {
             expect(fieldType).toContain("active:scale-105");
             await commonPage.performClick(search.abclink);
             const openedurl = await commonPage.getCurrentUrl();
-            const expectedurl = (activeBaseUrl + Paths.Manufacturer + Paths.ManufactureBrandPage);
+            const expectedurl = (activeBaseUrl + Paths.manufacture + Paths.ManufactureBrandPage);
             assert.strictEqual(openedurl, expectedurl);
 
         } catch (error) {
@@ -73,7 +73,7 @@ describe('Author: ', () => {
 
             await commonPage.performClick(search.abclink);
             const openedurl = await commonPage.getCurrentUrl();
-            const expectedurl = (activeBaseUrl + Paths.Manufacturer + Paths.ManufactureBrandPage);
+            const expectedurl = (activeBaseUrl + Paths.manufacture + Paths.ManufactureBrandPage);
             assert.strictEqual(openedurl, expectedurl);
 
         } catch (error) {

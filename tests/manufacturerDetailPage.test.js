@@ -48,7 +48,7 @@ describe('Author: ', () => {
 
     try {
       await performLogins(page, "regression");
-      await commonPage.navigateTo(Paths.Manufacturer + Paths.ManufactureBrandPage);
+      await commonPage.navigateTo(Paths.manufacture + Paths.ManufactureBrandPage);
       const prodname = await commonPage.getElementText(detail.productname);
       expect("Doors, Windows").toEqual(prodname);
       const direction = await commonPage.getElementText(detail.direction);
@@ -126,7 +126,7 @@ describe('Author: ', () => {
   it('It should verify that Manufacturer Detail Page -> "Home" link takes us to Manufacturer finder page', async () => {
 
     try {
-      await commonPage.navigateTo(Paths.Manufacturer + Paths.ManufactureBrandPage);
+      await commonPage.navigateTo(Paths.manufacture + Paths.ManufactureBrandPage);
       await commonPage.waitForLoadComplete();
       await commonPage.performClick(detail.homebreadcrumb);
       await commonPage.waitForLoadComplete();
